@@ -1,0 +1,10 @@
+// DEV ONLY — loosened rules
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /tasks/{id} {
+      allow read, write: if request.auth != null;
+    }
+    // add your collections here...
+  }
+}

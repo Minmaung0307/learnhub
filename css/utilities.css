@@ -1,0 +1,9 @@
+/* utilities.css */
+.clickable{cursor:pointer}
+.hidden{display:none!important}
+.right{display:flex;justify-content:flex-end;gap:8px}
+.center{display:grid;place-items:center}
+.pad{padding:10px}
+.section{margin-top:12px}
+.bad{color:var(--danger)}
+.ok{color:var(--ok)}

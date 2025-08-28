@@ -1,0 +1,20 @@
+/* layout.css */
+.app{display:grid;grid-template-columns:240px 1fr;min-height:100vh}
+.sidebar{border-right:1px solid var(--border);background:#fff;display:flex;flex-direction:column}
+.brand{display:flex;align-items:center;gap:10px;padding:12px;border-bottom:1px solid var(--border);font-weight:800}
+.nav{padding:8px;display:grid;gap:4px}
+.nav .item{display:flex;gap:10px;align-items:center;padding:10px;border-radius:10px}
+.nav .item.active,.nav .item:hover{background:#f3f6fb}
+.topbar{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);padding:10px;background:#fff;position:sticky;top:0;z-index:5}
+.page-hero{display:flex;align-items:center;gap:10px;padding:10px;border-bottom:1px solid var(--border);background:#fff}
+.page-hero .t{font-size:18px;font-weight:800}
+.main{padding:12px}
+#backdrop{display:none}
+.sidebar-open #backdrop{display:block;position:fixed;inset:0;background:rgba(0,0,0,.3)}
+/* mobile */
+@media(max-width:900px){
+  .app{grid-template-columns:1fr}
+  .sidebar{position:fixed;inset:0 30% 0 0;transform:translateX(-100%);transition:transform .18s;background:#fff;z-index:10}
+  .sidebar-open .sidebar{transform:none}
+  .topbar{position:sticky;top:0}
+}

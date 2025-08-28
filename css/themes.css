@@ -1,0 +1,3 @@
+/* themes.css: simple palette + font sizes */
+.theme-sunrise{--bg:#f6f8fb;--panel:#fff;--primary:#0ea5e9}
+.font-small{font-size:14px}.font-medium{font-size:16px}.font-large{font-size:18px}

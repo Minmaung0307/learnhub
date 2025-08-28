@@ -1,0 +1,1 @@
+// services/payments.js (stub for PayPal)

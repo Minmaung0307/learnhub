@@ -1,0 +1,4 @@
+/* pages/tasks.css */
+.task-card .actions{display:flex;gap:6px}
+.edit-inline{display:grid;grid-template-columns:1fr auto;gap:8px}
+.edit-inline .input{width:100%}
