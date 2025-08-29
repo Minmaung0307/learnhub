@@ -1,19 +1,19 @@
 // LearnHub Starter — robust, freeze-free
 // SPA with Firebase (Auth/Firestore/Storage), PayPal, and EmailJS
 // main.js (at the very top)
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
-import { getAuth } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
-import { getFirestore } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+// import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+// import { getAuth } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+// import { getFirestore } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyDVsqq0FLiGUp1I7JjH_yeYZBpqlDSo-uM",
-  authDomain: "learnhub-mm.firebaseapp.com",
-  projectId: "learnhub-mm",
-  storageBucket: "learnhub-mm.firebasestorage.app",
-  messagingSenderId: "961341989824",
-  appId: "1:961341989824:web:760be616c75561008cde25",
-  measurementId: "G-LM292D5D36",
-};
+// const firebaseConfig = {
+//   apiKey: "AIzaSyDVsqq0FLiGUp1I7JjH_yeYZBpqlDSo-uM",
+//   authDomain: "learnhub-mm.firebaseapp.com",
+//   projectId: "learnhub-mm",
+//   storageBucket: "learnhub-mm.firebasestorage.app",
+//   messagingSenderId: "961341989824",
+//   appId: "1:961341989824:web:760be616c75561008cde25",
+//   measurementId: "G-LM292D5D36",
+// };
 
 // ✅ Initialize Firebase once
 const app = initializeApp(firebaseConfig);
