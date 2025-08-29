@@ -40,7 +40,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-storage-compat.js"></script>
-    
+
     <!-- PayPal SDK injected dynamically using window.__PAYPAL_CLIENT_ID -->
 
     <script src="https://www.paypal.com/sdk/js?client-id=AVpfmQ8DyyatFaAGQ3Jg58XtUt_2cJDr1leqcc_JI8LvKIR2N5WB_yljqCOTTCtvK1hFJ7Q9X0ojXsEC"></script>
@@ -55,6 +55,17 @@
     <div id="root"></div>
     <div id="notification" class="notification"></div>
 
+    <script>
+      window.__FIREBASE_CONFIG = {
+        apiKey: "AIzaSyDVsqq0FLiGUp1I7JjH_yeYZBpqlDSo-uM",
+        authDomain: "learnhub-mm.firebaseapp.com",
+        projectId: "learnhub-mm",
+        storageBucket: "learnhub-mm.firebasestorage.app",
+        messagingSenderId: "961341989824",
+        appId: "1:961341989824:web:760be616c75561008cde25",
+        measurementId: "G-LM292D5D36",
+      };
+    </script>
     <!-- Main module -->
     <script type="module" src="/js/main.js"></script>
   </body>
