@@ -10,10 +10,17 @@ public/
       tasks.css
   js/
     main.js
-    core/           (reserved for future modules)
-    features/       (reserved for future modules)
+    router.js
+    util.js
+    core/
+      router.js
+      util.js
+    features/
+      contact.js
     services/
-      config.js     <-- put your keys here
+      config.js
+      firebase.js
+      seed.js
 firebase.json
 firestore.rules
 firestore.indexes.json
