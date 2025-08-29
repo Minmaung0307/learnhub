@@ -1,0 +1,142 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{db}/documents {
+
+    /* ---------- Helpers ---------- */
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return signedIn() &&
+        get(/databases/$(db)/documents/roles/$(request.auth.uid)).data.role == "admin";
+    }
+
+    // Owner helpers (docs that carry a `uid` field)
+    function isDocOwner() {
+      return signedIn() && resource.data.uid == request.auth.uid;
+    }
+
+    function isNewDocOwner() {
+      return signedIn() && request.resource.data.uid == request.auth.uid;
+    }
+
+    function keepUidUnchanged() {
+      return resource.data.uid == request.resource.data.uid;
+    }
+
+    /* ---------- Roles (RBAC) ---------- */
+    match /roles/{uid} {
+      // A user can read their own role doc; admins can read any
+      allow read: if isAdmin() || (signedIn() && request.auth.uid == uid);
+      // Only admins can create/update roles
+      allow write: if isAdmin();
+    }
+
+    /* ---------- Profiles ---------- */
+    match /profiles/{uid} {
+      allow read: if true;
+
+      // User can create/update/delete their own profile; admins can manage any profile
+      allow create: if signedIn() && request.auth.uid == uid;
+      allow update: if (signedIn() && request.auth.uid == uid) || isAdmin();
+      allow delete: if (signedIn() && request.auth.uid == uid) || isAdmin();
+    }
+
+    /* ---------- Announcements ---------- */
+    match /announcements/{id} {
+      allow read: if true;
+      allow create, update, delete: if isAdmin();
+    }
+
+    /* ---------- Messages (Course/DM/Group chat) ---------- */
+    match /messages/{id} {
+      // Signed in users can read chat
+      allow read: if signedIn();
+
+      // Only the sender can create messages with their uid
+      allow create: if isNewDocOwner();
+
+      // Sender can edit/delete their own message; admins can moderate
+      allow update, delete: if isDocOwner() || isAdmin();
+
+      // Prevent changing ownership on edits
+      allow update: if (isDocOwner() || isAdmin()) && keepUidUnchanged();
+    }
+
+    /* ---------- Courses ---------- */
+    match /courses/{id} {
+      allow read: if true;
+      allow create, update, delete: if isAdmin();
+    }
+
+    /* ---------- Quizzes (finals) ---------- */
+    match /quizzes/{id} {
+      allow read: if true;
+      allow create, update, delete: if isAdmin();
+    }
+
+    /* ---------- Tasks (per-user) ---------- */
+    match /tasks/{id} {
+      // Read your own tasks; admins may help with support if needed
+      allow read: if isDocOwner() || isAdmin();
+
+      // Create must set uid == caller
+      allow create: if isNewDocOwner();
+
+      // Update/delete only by owner (admin optional)
+      allow update: if isDocOwner() && keepUidUnchanged();
+      allow delete: if isDocOwner() || isAdmin();
+    }
+
+    /* ---------- Enrollments ---------- */
+    match /enrollments/{id} {
+      // User can read their own enrollment; admins can read for roster sync
+      allow read: if isDocOwner() || isAdmin();
+
+      // Create must set uid == caller
+      allow create: if isNewDocOwner();
+
+      // Update: owner only and cannot change uid
+      allow update: if isDocOwner() && keepUidUnchanged();
+
+      // Delete: owner or admin
+      allow delete: if isDocOwner() || isAdmin();
+    }
+
+    /* ---------- Attempts (quiz results) ---------- */
+    match /attempts/{id} {
+      allow read: if isDocOwner() || isAdmin();
+      allow create: if isNewDocOwner();
+      allow update: if isDocOwner() && keepUidUnchanged();
+      allow delete: if isDocOwner() || isAdmin();
+    }
+
+    /* ---------- Payments (optional storage) ---------- */
+    match /payments/{id} {
+      // User sees their own payments; admins see all
+      allow read: if isDocOwner() || isAdmin();
+
+      // Create by the paying user (or admin on reconcile)
+      allow create: if isNewDocOwner() || isAdmin();
+
+      // Updates/deletes should be admin-only to avoid tampering
+      allow update, delete: if isAdmin();
+    }
+
+    /* ---------- Contact ---------- */
+    match /contact/{id} {
+      // Public can create contact messages
+      allow create: if true;
+
+      // Only admins may read/update/delete
+      allow read, update, delete: if isAdmin();
+    }
+
+    /* ---------- Default deny ---------- */
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
