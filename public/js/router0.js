@@ -1,4 +1,4 @@
-import { $, notify } from "./util.js";
+import { $, notify } from "./util0.js";
 export function installRouter(state, render){
   state.routes = ["dashboard","courses","course-detail","learning","assessments","chat","tasks","profile","admin","guide","settings","search","contact"];
   state.route = "dashboard";
