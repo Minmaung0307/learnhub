@@ -4,12 +4,12 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>LearnHub (Ports) — Firebase Demo</title>
-    <link rel="stylesheet" href="public/css/base.css" />
-    <link rel="stylesheet" href="public/css/layout.css" />
-    <link rel="stylesheet" href="public/css/components.css" />
-    <link rel="stylesheet" href="public/css/utilities.css" />
-    <link rel="stylesheet" href="public/css/themes.css" />
-    <link rel="stylesheet" href="public/css/pages/tasks.css" />
+    <link rel="stylesheet" href="/css/base.css" />
+    <link rel="stylesheet" href="/css/layout.css" />
+    <link rel="stylesheet" href="/css/components.css" />
+    <link rel="stylesheet" href="/css/utilities.css" />
+    <link rel="stylesheet" href="/css/themes.css" />
+    <link rel="stylesheet" href="/css/pages/tasks.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -54,6 +54,13 @@
   <body class="theme-sunrise font-medium">
     <div id="root"></div>
 
-    <script type="module" src="public/js/main.js"></script>
+    <script type="importmap">
+{
+  "imports": {
+    "@/": "/js/"
+  }
+}
+</script>
+<script type="module" src="/js/main.js"></script>
   </body>
 </html>
