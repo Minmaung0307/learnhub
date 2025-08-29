@@ -1,0 +1,28 @@
+{
+  "chapters": [
+    {
+      "title": "Welcome",
+      "lessons": [
+        {
+          "title": "What is HTML?",
+          "duration": 6
+        },
+        {
+          "title": "CSS in 10 min",
+          "duration": 10
+        }
+      ]
+    },
+    {
+      "title": "JS Basics",
+      "lessons": [
+        {
+          "title": "Variables"
+        },
+        {
+          "title": "Functions"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "intro": [
+    {
+      "q": "Which is valid JSON?",
+      "choices": [
+        "{'a':1}",
+        "{\"a\":1}"
+      ],
+      "answer": 1
+    }
+  ]
+}

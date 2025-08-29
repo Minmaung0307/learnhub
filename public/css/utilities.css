@@ -1,9 +1,13 @@
-/* utilities.css */
+
+.num{ text-align:right; }
+.section-box{ border:1px solid var(--border); border-radius:12px; padding:10px; background:#fff; }
+.paypal-zone.hidden{ display:none; }
+
+
+.muted{color:var(--muted)}
+.hidden{display:none}
 .clickable{cursor:pointer}
-.hidden{display:none!important}
-.right{display:flex;justify-content:flex-end;gap:8px}
-.center{display:grid;place-items:center}
-.pad{padding:10px}
-.section{margin-top:12px}
-.bad{color:var(--danger)}
-.ok{color:var(--ok)}
+.list-tight{margin:0;padding-left:18px}
+.paypal-zone{border:1px dashed var(--border);border-radius:12px;padding:10px}
+.detail-actions{position:sticky;bottom:10px}
+.detail-actions-inner{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:10px}

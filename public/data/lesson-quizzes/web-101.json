@@ -1,0 +1,21 @@
+{
+  "chapter1": [
+    {
+      "q": "What tag for paragraph?",
+      "choices": [
+        "<p>",
+        "<h1>",
+        "<a>"
+      ],
+      "answer": 0
+    },
+    {
+      "q": "CSS stands for?",
+      "choices": [
+        "Cascading Style Sheets",
+        "Cool Style Set"
+      ],
+      "answer": 0
+    }
+  ]
+}

@@ -1,3 +1,13 @@
-/* themes.css: simple palette + font sizes */
-.theme-sunrise{--bg:#f6f8fb;--panel:#fff;--primary:#0ea5e9}
+
+/* Palettes */
+.theme-sunrise{--bg:#0b1220;--panel:#0f172a;--border:#1e293b;--text:#e5e7eb;--primary:#0ea5e9}
+.theme-light{--bg:#f8fafc;--panel:#fff;--border:#e5eaf0;--text:#0b1220;--primary:#4f46e5}
+.theme-ocean{--bg:#0b1220;--panel:#0c1729;--border:#19324a;--text:#e6f1ff;--primary:#38bdf8}
+.theme-forest{--bg:#0b1220;--panel:#0f1d16;--border:#183225;--text:#e7f5ee;--primary:#22c55e}
+.theme-grape{--bg:#0b1220;--panel:#1a1020;--border:#2a1733;--text:#f5e9ff;--primary:#a855f7}
+.theme-rose{--bg:#0b1220;--panel:#19101a;--border:#331c2a;--text:#fde2e8;--primary:#f43f5e}
+.theme-cobalt{--bg:#0b1220;--panel:#0d1530;--border:#18224a;--text:#e8edff;--primary:#2563eb}
+.theme-emerald{--bg:#0b1220;--panel:#081a14;--border:#112d24;--text:#eafff7;--primary:#10b981}
+.theme-sand{--bg:#0b1220;--panel:#14171b;--border:#2a2f37;--text:#f4f2ee;--primary:#f59e0b}
+.theme-midnight{--bg:#0b1220;--panel:#0a0f1a;--border:#162235;--text:#e7efff;--primary:#60a5fa}
 .font-small{font-size:14px}.font-medium{font-size:16px}.font-large{font-size:18px}

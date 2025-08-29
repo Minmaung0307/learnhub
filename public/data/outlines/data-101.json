@@ -1,0 +1,26 @@
+{
+  "chapters": [
+    {
+      "title": "Data Sources",
+      "lessons": [
+        {
+          "title": "CSV vs JSON"
+        },
+        {
+          "title": "APIs"
+        }
+      ]
+    },
+    {
+      "title": "Charting",
+      "lessons": [
+        {
+          "title": "Bar Chart"
+        },
+        {
+          "title": "Line Chart"
+        }
+      ]
+    }
+  ]
+}
