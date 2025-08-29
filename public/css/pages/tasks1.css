@@ -1,0 +1,5 @@
+
+.lane-row{min-height:220px}
+.lane-grid{min-height:180px}
+.task-card{cursor:grab}
+input.fullwidth,textarea.fullwidth{width:100%}

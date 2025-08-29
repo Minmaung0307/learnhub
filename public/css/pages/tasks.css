@@ -1,5 +1,1 @@
-
-.lane-row{min-height:220px}
-.lane-grid{min-height:180px}
-.task-card{cursor:grab}
-input.fullwidth,textarea.fullwidth{width:100%}
+.task-board { display: flex; gap: 1rem; } .task-column { flex:1; background:#f4f4f4; padding:10px; }

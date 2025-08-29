@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>LearnHub</title>
+    <link rel="icon" href="/icons/learnhub-cap.svg" />
+    <link rel="stylesheet" href="/css/base.css" />
+    <link rel="stylesheet" href="/css/layout.css" />
+    <link rel="stylesheet" href="/css/components.css" />
+    <link rel="stylesheet" href="/css/themes.css" />
+    <link rel="stylesheet" href="/css/utilities.css" />
+    <link rel="stylesheet" href="/css/pages/tasks.css" />
+
+    <style>
+      /* fallback */
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font-family: Inter, system-ui, Segoe UI, Roboto, Helvetica, Arial,
+          sans-serif;
+      }
+    </style>
+
+    <!-- <style>
+    /* minimal reset for full-height app */
+    html, body, #root { height: 100%; }
+    body { background: var(--bg, #0b1220); }
+  </style> -->
+
+    <!-- Remix Icons -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css"
+      rel="stylesheet"
+    />
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-storage-compat.js"></script>
+
+    <!-- PayPal SDK injected dynamically using window.__PAYPAL_CLIENT_ID -->
+
+    <script src="https://www.paypal.com/sdk/js?client-id=AVpfmQ8DyyatFaAGQ3Jg58XtUt_2cJDr1leqcc_JI8LvKIR2N5WB_yljqCOTTCtvK1hFJ7Q9X0ojXsEC"></script>
+
+    <!-- EmailJS -->
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
+    <!-- App config (fill in your keys) -->
+    <script src="/js/services/config.js"></script>
+  </head>
+  <body class="theme-sunrise font-medium">
+    <div id="root"></div>
+    <div id="notification" class="notification"></div>
+    <!-- Admin: Seed Demo -->
+    <div id="seed-demo-wrap" style="display: none; margin: 1rem 0">
+      <!-- Admin Seed Button -->
+      <button
+        id="seedDemoBtn"
+        style="
+          margin: 1rem;
+          background: #6200ea;
+          color: white;
+          padding: 8px 16px;
+          border: none;
+          border-radius: 6px;
+          cursor: pointer;
+        "
+      >
+        🌱 Seed Demo
+      </button>
+      <span
+        id="seed-demo-status"
+        style="margin-left: 0.5rem; font-size: 0.9rem"
+      ></span>
+    </div>
+
+    <script>
+      window.__FIREBASE_CONFIG = {
+        apiKey: "AIzaSyDVsqq0FLiGUp1I7JjH_yeYZBpqlDSo-uM",
+        authDomain: "learnhub-mm.firebaseapp.com",
+        projectId: "learnhub-mm",
+        storageBucket: "learnhub-mm.firebasestorage.app",
+        messagingSenderId: "961341989824",
+        appId: "1:961341989824:web:760be616c75561008cde25",
+        measurementId: "G-LM292D5D36",
+      };
+    </script>
+
+    <!-- Include after Firebase compat is loaded and db/auth are initialized -->
+    <script>
+      (function () {
+        const wrap = document.getElementById("seed-demo-wrap");
+        const btn = document.getElementById("btn-seed-demo");
+        const note = document.getElementById("seed-demo-status");
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        function setStatus(m, c) {
+          if (note) {
+            note.textContent = m || "";
+            note.style.color =
+              c === "error" ? "#b00020" : c === "ok" ? "#0f7b0f" : "#555";
+          }
+        }
+
+        async function isAdmin(uid) {
+          try {
+            const snap = await db.collection("roles").doc(uid).get();
+            return snap.exists && snap.data().role === "admin";
+          } catch (e) {
+            console.error(e);
+            return false;
+          }
+        }
+
+        async function alreadySeeded() {
+          const snap = await db.collection("meta").doc("seedDemo").get();
+          return snap.exists && !!snap.data().done;
+        }
+
+        async function seedDemo() {
+          const user = auth.currentUser;
+          if (!user) {
+            setStatus("Sign in first.", "error");
+            return;
+          }
+          btn.disabled = true;
+          setStatus("Seeding…");
+          try {
+            await db
+              .collection("roles")
+              .doc(user.uid)
+              .set(
+                {
+                  role: "admin",
+                  updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                },
+                { merge: true }
+              );
+
+            if (await alreadySeeded()) {
+              setStatus("Already seeded. Nothing to do.", "ok");
+              btn.disabled = false;
+              return;
+            }
+
+            const now = firebase.firestore.FieldValue.serverTimestamp();
+
+            // Announcements
+            for (const a of [
+              {
+                title: "Welcome to LearnHub!",
+                body: "Explore courses and chat.",
+                createdAt: now,
+              },
+              {
+                title: "New Features",
+                body: "Short-answer finals & landscape certificates.",
+                createdAt: now,
+              },
+            ]) {
+              await db.collection("announcements").add({ ...a, uid: user.uid });
+            }
+
+            // Courses
+            const courseRefs = [];
+            for (const c of [
+              {
+                title: "HTML & CSS Basics (Free)",
+                price: 0,
+                tags: ["web", "html", "css"],
+                content: [
+                  { type: "text", title: "Intro", text: "Structure & style." },
+                  {
+                    type: "audio",
+                    title: "Layout",
+                    url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+                  },
+                  {
+                    type: "video",
+                    title: "Typography",
+                    url: "https://www.youtube.com/watch?v=1Rs2ND1ryYc",
+                  },
+                  {
+                    type: "quiz",
+                    title: "Quick Quiz",
+                    items: [
+                      {
+                        kind: "mcq",
+                        q: "HTML stands for…",
+                        choices: [
+                          "Hyperlinks and Text Markup Language",
+                          "Hyper Text Markup Language",
+                        ],
+                        answer: 1,
+                      },
+                      {
+                        kind: "short",
+                        q: "CSS property for text color?",
+                        answer: "color",
+                      },
+                    ],
+                  },
+                ],
+              },
+              {
+                title: "JavaScript for Data (Paid)",
+                price: 49,
+                tags: ["js", "data", "charts"],
+                content: [
+                  { type: "text", title: "Arrays", text: "map/filter/reduce" },
+                  {
+                    type: "video",
+                    title: "Chart.js Intro",
+                    url: "https://www.youtube.com/watch?v=sE08f4iuOhA",
+                  },
+                  {
+                    type: "quiz",
+                    title: "Data Quiz",
+                    items: [
+                      {
+                        kind: "mcq",
+                        q: "Mean of [2,4,6]?",
+                        choices: ["3", "4", "5"],
+                        answer: 1,
+                      },
+                      {
+                        kind: "short",
+                        q: "Chart lib starting with C?",
+                        answer: "chart.js",
+                      },
+                    ],
+                  },
+                ],
+              },
+            ]) {
+              const ref = await db
+                .collection("courses")
+                .add({
+                  ...c,
+                  active: true,
+                  createdAt: now,
+                  ownerUid: user.uid,
+                });
+              courseRefs.push(ref);
+            }
+
+            // Finals
+            for (const f of [
+              {
+                courseRef: courseRefs[0],
+                passScore: 60,
+                items: [
+                  {
+                    type: "mcq",
+                    q: "CSS stands for…",
+                    choices: [
+                      "Cascading Style Sheets",
+                      "Creative Style System",
+                    ],
+                    answer: 0,
+                  },
+                  { type: "short", q: "HTML tag for a link?", answer: "<a>" },
+                ],
+              },
+              {
+                courseRef: courseRefs[1],
+                passScore: 70,
+                items: [
+                  {
+                    type: "mcq",
+                    q: "Mean of [1,2,3]?",
+                    choices: ["1", "2", "3"],
+                    answer: 1,
+                  },
+                  {
+                    type: "short",
+                    q: "Array method to combine values?",
+                    answer: "reduce",
+                  },
+                ],
+              },
+            ]) {
+              const courseSnap = await f.courseRef.get();
+              await db.collection("finals").add({
+                courseId: f.courseRef.id,
+                courseTitle: courseSnap.data()?.title || "",
+                isFinal: true,
+                passScore: f.passScore,
+                items: f.items,
+                ownerUid: user.uid,
+                createdAt: now,
+              });
+            }
+
+            // Task
+            await db
+              .collection("tasks")
+              .add({
+                uid: user.uid,
+                title: "Review Demo Course",
+                due: new Date(Date.now() + 7 * 864e5).toISOString(),
+                done: false,
+                createdAt: now,
+              });
+
+            // Chat
+            for (const ch of ["general", courseRefs[0].id]) {
+              await db
+                .collection("messages")
+                .add({
+                  channel: ch,
+                  text:
+                    ch === "general"
+                      ? "Welcome to general chat!"
+                      : "Discussion for HTML & CSS course.",
+                  uid: user.uid,
+                  createdAt: now,
+                });
+            }
+
+            // Profile
+            await db
+              .collection("profiles")
+              .doc(user.uid)
+              .set(
+                {
+                  displayName: user.displayName || "Admin User",
+                  email: user.email,
+                  avatarUrl: "",
+                  signatureUrl: "",
+                  bio: "This is a demo admin profile.",
+                  updatedAt: now,
+                },
+                { merge: true }
+              );
+
+            // Certificate + transcript placeholders
+            await db
+              .collection("certificates")
+              .add({
+                uid: user.uid,
+                courseId: courseRefs[0].id,
+                style: "landscape",
+                downloadUrl: "",
+                createdAt: now,
+              });
+            await db.collection("transcripts").add({
+              uid: user.uid,
+              entries: [
+                {
+                  courseId: courseRefs[0].id,
+                  title: "HTML & CSS Basics (Free)",
+                  score: 95,
+                },
+                {
+                  courseId: courseRefs[1].id,
+                  title: "JavaScript for Data (Paid)",
+                  score: 88,
+                },
+              ],
+              createdAt: now,
+            });
+
+            // Mark seeded
+            await db
+              .collection("meta")
+              .doc("seedDemo")
+              .set({ done: true, by: user.uid, at: now, version: 1 });
+
+            setStatus("Seeded ✔", "ok");
+          } catch (err) {
+            console.error(err);
+            setStatus(err.message || "Seeding failed", "error");
+          } finally {
+            btn.disabled = false;
+          }
+        }
+
+        auth.onAuthStateChanged(async (u) => {
+          if (!u) {
+            if (wrap) wrap.style.display = "none";
+            return;
+          }
+          if (await isAdmin(u.uid)) {
+            if (wrap) wrap.style.display = "";
+            if (btn && !btn.dataset.bound) {
+              btn.dataset.bound = "1";
+              btn.addEventListener("click", seedDemo);
+            }
+          } else {
+            if (wrap) wrap.style.display = "none";
+          }
+        });
+      })();
+    </script>
+    <!-- Main module -->
+    <script type="module" src="/js/main.js"></script>
+  </body>
+</html>
