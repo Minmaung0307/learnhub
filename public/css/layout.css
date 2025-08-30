@@ -1,86 +1,116 @@
-:root{
+:root {
   --sidebar-collapsed: 64px;
-  --sidebar-expanded: 240px;
+  --sidebar-expanded: 260px; /* wider so labels fit on one line */
   --sidebar-bg: #121a2e;
   --sidebar-border: #22305a;
-  --icon-size: 28px;   /* bigger icons */
+  --icon-size: 28px;
   --item-h: 48px;
 }
 
-#sidebar{
+#sidebar {
   background: var(--sidebar-bg);
   border-right: 1px solid var(--sidebar-border);
-  position: sticky; top:0; height:100vh;
+  position: sticky;
+  top: 0;
+  height: 100vh;
   width: var(--sidebar-collapsed);
-  transition: width .18s ease;
+  transition: width 0.18s ease;
   overflow: hidden;
-  display:flex; flex-direction:column; align-items:stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
   padding: 10px 8px;
 }
 
-#sidebar:hover{
+#sidebar:hover {
   width: var(--sidebar-expanded);
 }
 
-#sidebar .logo{
-  width: 40px; height: 40px; margin: 4px auto 8px;
+#sidebar .logo {
+  width: 40px;
+  height: 40px;
+  margin: 4px auto 8px;
   border-radius: 10px;
-  background: linear-gradient(135deg,#2bb5ff,#35c2d1);
-  display:grid; place-items:center; color:#00121a; font-weight:800;
+  background: linear-gradient(135deg, #2bb5ff, #35c2d1);
+  display: grid;
+  place-items: center;
+  color: #00121a;
+  font-weight: 800;
 }
 
-#side-nav{
-  display:flex; flex-direction:column; gap: 8px; margin-top: 6px;
+/* NAV: use grid so icon + label stay on same row */
+#side-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 6px;
 }
 
-#side-nav a{
-  display:flex; align-items:center; gap: 12px;
+#side-nav a {
+  display: grid;
+  grid-template-columns: 36px 1fr;
+  align-items: center; /* <- key line */
+  column-gap: 12px;
   height: var(--item-h);
   padding: 0 10px;
   color: #cfe3ff;
-  text-decoration:none;
+  text-decoration: none;
   border-radius: 12px;
   outline: 0;
+  min-width: 0; /* prevent label overflow pushing to new line */
 }
 
-#side-nav a:hover{
+#side-nav a:hover {
   background: #1e2a4f;
   color: #fff;
 }
-
-#side-nav a[data-admin="true"]{
+#side-nav a[data-admin="true"] {
   outline: 1px dashed #2bb5ff33;
 }
 
-#side-nav a .icon{
-  width: 36px; min-width:36px;
-  display:grid; place-items:center;
+#side-nav a .icon {
+  width: 36px;
+  min-width: 36px;
+  display: grid;
+  place-items: center;
   font-size: var(--icon-size);
   line-height: 1;
 }
 
-#side-nav a .nav-label{
-  white-space: nowrap;
+#side-nav a .nav-label {
+  white-space: nowrap; /* never wrap under icon */
+  overflow: hidden;
+  text-overflow: ellipsis;
   opacity: 0;
   transform: translateX(-6px);
-  max-width: 0;
-  overflow: hidden;
-  transition: opacity .12s ease, transform .12s ease, max-width .18s ease;
+  max-width: 0; /* hide when collapsed */
+  transition: opacity 0.12s ease, transform 0.12s ease, max-width 0.18s ease;
   color: #e8eeff;
   font-size: 14px;
 }
 
-#sidebar:hover #side-nav a .nav-label{
+/* reveal labels only when the sidebar (not just the item) is hovered */
+#sidebar:hover #side-nav a .nav-label {
   opacity: 1;
   transform: translateX(0);
-  max-width: 180px;
+  max-width: 180px; /* room for text but stays in one line */
 }
 
-/* Mobile: open via burger (no hover). Make labels visible when open */
-@media (max-width: 900px){
-  #sidebar{ position:fixed; left:-260px; top:0; width: var(--sidebar-expanded); z-index: 20; }
-  body.sidebar-open #sidebar{ left:0; }
-  body.sidebar-open #side-nav a .nav-label{
-    opacity:1; transform:none; max-width:180px;
+/* Mobile: open via burger (no hover). When open, labels visible */
+@media (max-width: 900px) {
+  #sidebar {
+    position: fixed;
+    left: -260px;
+    top: 0;
+    width: var(--sidebar-expanded);
+    z-index: 20;
+  }
+  body.sidebar-open #sidebar {
+    left: 0;
+  }
+  body.sidebar-open #side-nav a .nav-label {
+    opacity: 1;
+    transform: none;
+    max-width: 180px;
   }
 }

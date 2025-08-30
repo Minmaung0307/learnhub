@@ -1,38 +1,40 @@
-// ===== one-time init guard (prevents duplicate runs) =====
+// ===== guard: prevent double execution if main.js is included twice =====
 if (window.__LEARNHUB_INITTED__) {
-  console.warn("main.js already initialized – aborting duplicate run");
+  console.warn("[LearnHub] main.js already initialized, stopping duplicate run.");
   throw new Error("Duplicate main.js include");
 }
 window.__LEARNHUB_INITTED__ = true;
-// ========================================================
+// =======================================================================
 
-// ---- KEEP your inline config but use safe assignments (avoid invalid LHS) ----
-if (!window.__FIREBASE_CONFIG) {
-  window.__FIREBASE_CONFIG = {
-    apiKey: "AIzaSyDVsqq0FLiGUp1I7JjH_yeYZBpqlDSo-uM",
-    authDomain: "learnhub-mm.firebaseapp.com",
-    projectId: "learnhub-mm",
-    // IMPORTANT: use appspot.com here (the other host breaks Storage)
-    storageBucket: "learnhub-mm.appspot.com",
-    messagingSenderId: "961341989824",
-    appId: "1:961341989824:web:760be616c75561008cde25",
-    measurementId: "G-LM292D5D36",
-  };
-}
+// ---- SAFE CONFIG (no ||=, no weird assignments) ----
+(function ensureConfigs(){
+  if (!window.__FIREBASE_CONFIG) {
+    window.__FIREBASE_CONFIG = {
+      apiKey: "AIzaSyDVsqq0FLiGUp1I7JjH_yeYZBpqlDSo-uM",
+      authDomain: "learnhub-mm.firebaseapp.com",
+      projectId: "learnhub-mm",
+      // IMPORTANT: Firestore/Storage web SDK expects *.appspot.com (not firebasestorage.app)
+      storageBucket: "learnhub-mm.appspot.com",
+      messagingSenderId: "961341989824",
+      appId: "1:961341989824:web:760be616c75561008cde25",
+      measurementId: "G-LM292D5D36",
+    };
+  }
 
-if (!window.__EMAILJS_CONFIG) {
-  window.__EMAILJS_CONFIG = {
-    publicKey: "WT0GOYrL9HnDKvLUf",
-    serviceId: "service_z9tkmvr",
-    templateId: "template_q5q471f",
-    toEmail: "minmaung0307@gmail.com",
-  };
-}
+  if (!window.__EMAILJS_CONFIG) {
+    window.__EMAILJS_CONFIG = {
+      publicKey: "WT0GOYrL9HnDKvLUf",
+      serviceId: "service_z9tkmvr",
+      templateId: "template_q5q471f",
+      toEmail: "minmaung0307@gmail.com",
+    };
+  }
 
-if (!window.__PAYPAL_CLIENT_ID) {
-  window.__PAYPAL_CLIENT_ID =
-    "AVpfmQ8DyyatFaAGQ3Jg58XtUt_2cJDr1leqcc_JI8LvKIR2N5WB_yljqCOTTCtvK1hFJ7Q9X0ojXsEC";
-}
+  if (!window.__PAYPAL_CLIENT_ID) {
+    window.__PAYPAL_CLIENT_ID =
+      "AVpfmQ8DyyatFaAGQ3Jg58XtUt_2cJDr1leqcc_JI8LvKIR2N5WB_yljqCOTTCtvK1hFJ7Q9X0ojXsEC";
+  }
+})();
 
 // ------- Firebase (v10 modular) -------
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js";
