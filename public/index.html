@@ -1,128 +1,103 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="utf-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>LearnHub</title>
-  <link rel="stylesheet" href="css/base.css" />
-  <link rel="stylesheet" href="css/layout.css" />
-  <link rel="stylesheet" href="css/components.css" />
-  <link rel="stylesheet" href="css/themes.css" />
-  <link rel="stylesheet" href="css/utilities.css" />
-  <link rel="stylesheet" href="css/pages/tasks.css" />
 
-  <!-- jsPDF for certificates/transcripts -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <!-- Core CSS order -->
+  <link rel="stylesheet" href="/css/base.css" />
+  <link rel="stylesheet" href="/css/layout.css" />
+  <link rel="stylesheet" href="/css/components.css" />
+  <link rel="stylesheet" href="/css/themes.css" />
+  <link rel="stylesheet" href="/css/utilities.css" />
+  <link rel="stylesheet" href="/css/pages/tasks.css" />
 
-  <!-- Firebase compat SDKs -->
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
+  <!-- Favicons (optional) -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='12' fill='%2306b6d4'/><text x='50%' y='55%' text-anchor='middle' font-family='Arial' font-size='28' fill='white'>L</text></svg>">
 
-  <!-- EmailJS -->
-  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
-
-  <!-- PayPal -->
-  <script src="https://www.paypal.com/sdk/js?client-id=AVpfmQ8DyyatFaAGQ3Jg58XtUt_2cJDr1leqcc_JI8LvKIR2N5WB_yljqCOTTCtvK1hFJ7Q9X0ojXsEC"></script>
+  <!-- EmailJS (loaded globally; used by contact/features) -->
+  <script defer src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 </head>
-<body>
-  <div id="app">
-    <!-- Sidebar -->
-    <aside id="sidebar">
-      <h2 class="logo">LearnHub</h2>
-      <nav>
-        <ul>
-          <li data-view="dashboard">Dashboard</li>
-          <li data-view="courses">Courses</li>
-          <li data-view="my-learning">My Learning</li>
-          <li data-view="tasks">Tasks</li>
-          <li data-view="announcements">Announcements</li>
-          <li data-view="finals">Finals</li>
-          <li data-view="profile">Profile</li>
-          <li data-view="certificate">Certificates</li>
-          <li data-view="transcript">Transcripts</li>
-          <li data-view="guide">Guide</li>
-          <li data-view="settings">Settings</li>
-          <li data-view="admin">Admin</li>
-        </ul>
+<body class="theme-default">
+
+  <!-- Mobile burger -->
+  <button id="burger" class="burger" aria-label="Open menu" aria-expanded="false">☰</button>
+
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-inner">
+      <div class="brand">
+        <div class="logo-circle">L</div>
+        <div class="brand-text">LearnHub</div>
+      </div>
+      <nav class="nav">
+        <a href="#/dashboard" class="nav-item">
+          <i class="icon icon-dashboard"></i><span class="label">Dashboard</span>
+        </a>
+        <a href="#/courses" class="nav-item">
+          <i class="icon icon-courses"></i><span class="label">Courses</span>
+        </a>
+        <a href="#/mylearning" class="nav-item">
+          <i class="icon icon-learning"></i><span class="label">My Learning</span>
+        </a>
+        <a href="#/tasks" class="nav-item">
+          <i class="icon icon-tasks"></i><span class="label">Tasks</span>
+        </a>
+        <a href="#/announcements" class="nav-item">
+          <i class="icon icon-announcements"></i><span class="label">Announcements</span>
+        </a>
+        <a href="#/chat" class="nav-item">
+          <i class="icon icon-chat"></i><span class="label">Course Chat</span>
+        </a>
+        <a href="#/finals" class="nav-item">
+          <i class="icon icon-finals"></i><span class="label">Finals</span>
+        </a>
+        <a href="#/profile" class="nav-item">
+          <i class="icon icon-profile"></i><span class="label">Profile</span>
+        </a>
+        <a href="#/guide" class="nav-item">
+          <i class="icon icon-guide"></i><span class="label">Guide</span>
+        </a>
+        <a href="#/settings" class="nav-item">
+          <i class="icon icon-settings"></i><span class="label">Settings</span>
+        </a>
+
+        <!-- Admin menu always present; visibility handled in JS -->
+        <a href="#/admin" class="nav-item" data-admin="true">
+          <i class="icon icon-admin"></i><span class="label">Admin</span>
+        </a>
       </nav>
-      <button id="signoutBtn">Sign Out</button>
-    </aside>
+      <div class="sidebar-footer">
+        <button data-action="logout" class="btn btn-ghost w-full">Sign out</button>
+      </div>
+    </div>
+  </aside>
 
-    <!-- Main content -->
-    <main id="main">
-      <div id="view-container"></div>
-      <div class="lesson-header">
-  <h2 id="lesson-title"></h2>
-</div>
+  <!-- Main Layout -->
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="left">
+        <h1 class="app-title">LearnHub</h1>
+      </div>
+      <div class="right">
+        <span id="today" class="today"></span>
+        <input id="global-search" class="search" type="search" placeholder="Search courses, tasks, chat..." />
+      </div>
+    </header>
 
-<!-- Progress bar -->
-<div class="progress-container">
-  <div id="progress-bar" class="progress-bar"></div>
-</div>
-
-<!-- Bookmark -->
-<button class="bookmark-btn" onclick="saveBookmark(currentCourseId, currentLessonId, window.scrollY)">
-  Save Bookmark
-</button>
-
-<div class="lesson-header">
-  <h2 id="lesson-title">Lesson Title</h2>
-</div>
-
-<!-- Progress bar -->
-<div class="progress-container">
-  <div id="progress-bar" class="progress-bar"></div>
-</div>
-
-<!-- Lesson body -->
-<div id="lesson-content">
-  <!-- Text lesson OR video/audio goes here -->
-  <video id="lesson-video" controls style="max-width:100%;"></video>
-</div>
-
-<div class="overall-progress-container">
-  <div id="course-progress-bar" class="overall-progress-bar">0% Complete</div>
-</div>
-
-<section id="admin-progress">
-  <div id="admin-progress-container"></div>
-</section>
-
-<div id="progress-filters" class="filters">
-  <select id="filter-course">
-    <option value="">All Courses</option>
-  </select>
-
-  <select id="filter-student">
-    <option value="">All Students</option>
-  </select>
-
-  <select id="filter-progress">
-    <option value="">All Levels</option>
-    <option value="low">Low (0–33%)</option>
-    <option value="medium">Medium (34–66%)</option>
-    <option value="high">High (67–100%)</option>
-  </select>
-
-  <button id="sort-progress">Sort by Progress</button>
-</div>
-
-<table id="admin-progress-table">
-  <thead>
-    <tr>
-      <th>Student</th>
-      <th>Course</th>
-      <th>Progress</th>
-    </tr>
-  </thead>
-  <tbody id="progress-body"></tbody>
-</table>
+    <main id="app" class="app-content" role="main" tabindex="-1">
+      <!-- Routed views injected here -->
     </main>
+
+    <footer class="footer">
+      <span>© <span id="year"></span> LearnHub</span>
+    </footer>
   </div>
 
-  <!-- Main App JS -->
-  <script src="js/main.js" type="module"></script>
+  <!-- App (module) -->
+  <script type="module" src="/js/main.js"></script>
 </body>
 </html>
