@@ -1,0 +1,22 @@
+.admin-progress-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+  font-size: 0.9rem;
+}
+
+.admin-progress-table th,
+.admin-progress-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.admin-progress-table th {
+  background-color: #f4f4f4;
+  font-weight: bold;
+}
+
+.admin-progress-table tr:nth-child(even) {
+  background: #fafafa;
+}

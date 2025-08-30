@@ -1,29 +1,23 @@
-public/
-  index.html
-  css/
-    base.css
-    layout.css
-    components.css
-    themes.css
-    utilities.css
-    pages/
-      tasks.css
-  js/
-    main.js
-    router.js
-    util.js
-    core/
-      router.js
-      util.js
-    features/
-      contact.js
-    services/
-      config.js
-      firebase.js
-      seed.js
-firebase.json
-firestore.rules
-firestore.indexes.json
-storage.rules
-.firebaserc
-.gitignore
+learnhub-fixed/
+│
+├── public/
+│   ├── index.html
+│   ├── css/
+│   │   ├── base.css
+│   │   ├── layout.css
+│   │   ├── components.css
+│   │   ├── themes.css
+│   │   ├── utilities.css
+│   │   └── pages/
+│   │       └── tasks.css
+│   └── js/
+│       ├── main.js   <-- includes firebaseConfig inline + demo seeding
+│       ├── core/
+│       ├── features/
+│       └── services/
+│
+├── firebase.json
+├── firestore.rules
+├── firestore.indexes.json
+├── storage.rules
+└── .firebaserc

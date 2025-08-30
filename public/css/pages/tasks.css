@@ -1,1 +1,86 @@
-.task-board { display: flex; gap: 1rem; } .task-column { flex:1; background:#f4f4f4; padding:10px; }
+/* Kanban Board for Tasks */
+.kanban-board {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  padding: 20px 0;
+  margin-top: 1rem;
+}
+
+.kanban-column {
+  flex: 1;
+  min-width: 280px;
+  background: var(--background);
+  border: 2px solid var(--primary);
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+.kanban-column h3 {
+  text-align: center;
+  margin-bottom: 0.5rem;
+  color: var(--primary);
+}
+
+.kanban-task {
+  background: #fff;
+  border-radius: 6px;
+  padding: 10px;
+  margin-bottom: 10px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  cursor: grab;
+}
+
+.kanban-task.dragging {
+  opacity: 0.5;
+}
+
+.kanban-task .task-title {
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.kanban-task .task-meta {
+  font-size: 0.85rem;
+  color: #555;
+}
+
+.kanban-add-btn {
+  width: 100%;
+  margin-top: 10px;
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 8px;
+  cursor: pointer;
+}
+
+.kanban-add-btn:hover {
+  background: #333;
+}
+
+.kanban-dropzone {
+  min-height: 200px;
+  padding: 0.5rem;
+  border: 2px dashed #ccc;
+  border-radius: 6px;
+}
+
+.task-card {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  margin-bottom: 0.5rem;
+  padding: 0.5rem;
+  cursor: grab;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.task-card button {
+  background: transparent;
+  border: none;
+  color: red;
+  cursor: pointer;
+}

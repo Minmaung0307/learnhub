@@ -3,11 +3,126 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>LearnHub Fixed</title>
+  <title>LearnHub</title>
   <link rel="stylesheet" href="css/base.css" />
-  <script type="module" src="js/main.js"></script>
+  <link rel="stylesheet" href="css/layout.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/themes.css" />
+  <link rel="stylesheet" href="css/utilities.css" />
+  <link rel="stylesheet" href="css/pages/tasks.css" />
+
+  <!-- jsPDF for certificates/transcripts -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+  <!-- Firebase compat SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
+
+  <!-- EmailJS -->
+  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+
+  <!-- PayPal -->
+  <script src="https://www.paypal.com/sdk/js?client-id=AVpfmQ8DyyatFaAGQ3Jg58XtUt_2cJDr1leqcc_JI8LvKIR2N5WB_yljqCOTTCtvK1hFJ7Q9X0ojXsEC"></script>
 </head>
 <body>
-  <div id="app"></div>
+  <div id="app">
+    <!-- Sidebar -->
+    <aside id="sidebar">
+      <h2 class="logo">LearnHub</h2>
+      <nav>
+        <ul>
+          <li data-view="dashboard">Dashboard</li>
+          <li data-view="courses">Courses</li>
+          <li data-view="my-learning">My Learning</li>
+          <li data-view="tasks">Tasks</li>
+          <li data-view="announcements">Announcements</li>
+          <li data-view="finals">Finals</li>
+          <li data-view="profile">Profile</li>
+          <li data-view="certificate">Certificates</li>
+          <li data-view="transcript">Transcripts</li>
+          <li data-view="guide">Guide</li>
+          <li data-view="settings">Settings</li>
+          <li data-view="admin">Admin</li>
+        </ul>
+      </nav>
+      <button id="signoutBtn">Sign Out</button>
+    </aside>
+
+    <!-- Main content -->
+    <main id="main">
+      <div id="view-container"></div>
+      <div class="lesson-header">
+  <h2 id="lesson-title"></h2>
+</div>
+
+<!-- Progress bar -->
+<div class="progress-container">
+  <div id="progress-bar" class="progress-bar"></div>
+</div>
+
+<!-- Bookmark -->
+<button class="bookmark-btn" onclick="saveBookmark(currentCourseId, currentLessonId, window.scrollY)">
+  Save Bookmark
+</button>
+
+<div class="lesson-header">
+  <h2 id="lesson-title">Lesson Title</h2>
+</div>
+
+<!-- Progress bar -->
+<div class="progress-container">
+  <div id="progress-bar" class="progress-bar"></div>
+</div>
+
+<!-- Lesson body -->
+<div id="lesson-content">
+  <!-- Text lesson OR video/audio goes here -->
+  <video id="lesson-video" controls style="max-width:100%;"></video>
+</div>
+
+<div class="overall-progress-container">
+  <div id="course-progress-bar" class="overall-progress-bar">0% Complete</div>
+</div>
+
+<section id="admin-progress">
+  <div id="admin-progress-container"></div>
+</section>
+
+<div id="progress-filters" class="filters">
+  <select id="filter-course">
+    <option value="">All Courses</option>
+  </select>
+
+  <select id="filter-student">
+    <option value="">All Students</option>
+  </select>
+
+  <select id="filter-progress">
+    <option value="">All Levels</option>
+    <option value="low">Low (0–33%)</option>
+    <option value="medium">Medium (34–66%)</option>
+    <option value="high">High (67–100%)</option>
+  </select>
+
+  <button id="sort-progress">Sort by Progress</button>
+</div>
+
+<table id="admin-progress-table">
+  <thead>
+    <tr>
+      <th>Student</th>
+      <th>Course</th>
+      <th>Progress</th>
+    </tr>
+  </thead>
+  <tbody id="progress-body"></tbody>
+</table>
+    </main>
+  </div>
+
+  <!-- Main App JS -->
+  <script src="js/main.js" type="module"></script>
 </body>
 </html>
