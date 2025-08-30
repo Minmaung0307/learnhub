@@ -2,102 +2,81 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>LearnHub</title>
 
-  <!-- Core CSS order -->
-  <link rel="stylesheet" href="/css/base.css" />
-  <link rel="stylesheet" href="/css/layout.css" />
-  <link rel="stylesheet" href="/css/components.css" />
-  <link rel="stylesheet" href="/css/themes.css" />
-  <link rel="stylesheet" href="/css/utilities.css" />
-  <link rel="stylesheet" href="/css/pages/tasks.css" />
+  <!-- CSS order matters: base → layout → components → themes → utilities -->
+  <link rel="stylesheet" href="/css/base.css">
+  <link rel="stylesheet" href="/css/layout.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <link rel="stylesheet" href="/css/themes.css">
+  <link rel="stylesheet" href="/css/utilities.css">
+  <link rel="stylesheet" href="/css/pages/tasks.css">
 
-  <!-- Favicons (optional) -->
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='12' fill='%2306b6d4'/><text x='50%' y='55%' text-anchor='middle' font-family='Arial' font-size='28' fill='white'>L</text></svg>">
+  <style>
+    /* Minimal safety net so it's not “ugly” if a file is cached wrong */
+    :root { --bg:#0b1020; --panel:#121a2e; --card:#182342; --text:#e8eeff; --muted:#9bb0ff44; --accent:#35c2d1; }
+    html,body { height:100%; }
+    body { margin:0; background:linear-gradient(180deg,#0b1020,#0e1730 60%,#0b1020); color:var(--text); font: 14px/1.45 system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji"; }
+    .app-shell { display:grid; grid-template-columns: 64px 1fr; min-height:100vh; }
+    #sidebar { background:var(--panel); border-right:1px solid #22305a; position:sticky; top:0; height:100vh; display:flex; flex-direction:column; align-items:center; gap:12px; padding:10px 8px; }
+    #sidebar .logo { width:40px; height:40px; border-radius:10px; background:linear-gradient(135deg, #2bb5ff, #35c2d1); display:grid; place-items:center; color:#00121a; font-weight:800; }
+    #sidebar nav a { width:44px; height:44px; display:grid; place-items:center; border-radius:10px; color:#bcd7ff; text-decoration:none; }
+    #sidebar nav a:hover { background:#1e2a4f; color:#fff; }
+    #sidebar nav a[data-admin="true"]{ outline:1px dashed #2bb5ff33; }
+    header.appbar { position:sticky; top:0; z-index:5; background:rgba(15,22,40,.65); backdrop-filter:saturate(140%) blur(8px); border-bottom:1px solid #22305a; display:flex; align-items:center; gap:16px; padding:10px 16px; }
+    #global-search { flex:1; min-width:160px; background:#101733; border:1px solid #213061; padding:9px 12px; border-radius:10px; color:#cfe3ff; outline:none; }
+    #global-search::placeholder { color:#9db7ff99; }
+    #today { color:#9bb0ffcc; font-size:12px; }
+    .btn { background:#1c2a54; border:1px solid #27407b; color:#e8f0ff; padding:8px 12px; border-radius:10px; cursor:pointer; }
+    .btn:hover { background:#22335f; }
+    .btn-primary { background:linear-gradient(135deg,#2bb5ff,#35c2d1); border:none; color:#00222a; font-weight:700; }
 
-  <!-- EmailJS (loaded globally; used by contact/features) -->
-  <script defer src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    main#app { padding:16px; }
+    .card { background:linear-gradient(180deg, #131e3a, #0f1935); border:1px solid #203060; border-radius:14px; box-shadow: 0 6px 28px rgba(12,18,40,.45); }
+    .p-4 { padding:16px; } .p-3 { padding:12px; }
+    .mb-2{margin-bottom:8px;} .mb-3{margin-bottom:12px;}
+    .muted{ color:#bcd7ff99; }
+    @media (max-width: 900px) { .app-shell { grid-template-columns: 1fr; } #sidebar { position:fixed; left:-260px; width:220px; align-items:stretch; padding:16px; }
+      body.sidebar-open #sidebar { left:0; }
+      header.appbar { position:sticky; top:0; }
+    }
+  </style>
 </head>
-<body class="theme-default">
-
-  <!-- Mobile burger -->
-  <button id="burger" class="burger" aria-label="Open menu" aria-expanded="false">☰</button>
-
-  <!-- Sidebar -->
-  <aside class="sidebar" id="sidebar">
-    <div class="sidebar-inner">
-      <div class="brand">
-        <div class="logo-circle">L</div>
-        <div class="brand-text">LearnHub</div>
-      </div>
-      <nav class="nav">
-        <a href="#/dashboard" class="nav-item">
-          <i class="icon icon-dashboard"></i><span class="label">Dashboard</span>
-        </a>
-        <a href="#/courses" class="nav-item">
-          <i class="icon icon-courses"></i><span class="label">Courses</span>
-        </a>
-        <a href="#/mylearning" class="nav-item">
-          <i class="icon icon-learning"></i><span class="label">My Learning</span>
-        </a>
-        <a href="#/tasks" class="nav-item">
-          <i class="icon icon-tasks"></i><span class="label">Tasks</span>
-        </a>
-        <a href="#/announcements" class="nav-item">
-          <i class="icon icon-announcements"></i><span class="label">Announcements</span>
-        </a>
-        <a href="#/chat" class="nav-item">
-          <i class="icon icon-chat"></i><span class="label">Course Chat</span>
-        </a>
-        <a href="#/finals" class="nav-item">
-          <i class="icon icon-finals"></i><span class="label">Finals</span>
-        </a>
-        <a href="#/profile" class="nav-item">
-          <i class="icon icon-profile"></i><span class="label">Profile</span>
-        </a>
-        <a href="#/guide" class="nav-item">
-          <i class="icon icon-guide"></i><span class="label">Guide</span>
-        </a>
-        <a href="#/settings" class="nav-item">
-          <i class="icon icon-settings"></i><span class="label">Settings</span>
-        </a>
-
-        <!-- Admin menu always present; visibility handled in JS -->
-        <a href="#/admin" class="nav-item" data-admin="true">
-          <i class="icon icon-admin"></i><span class="label">Admin</span>
-        </a>
-      </nav>
-      <div class="sidebar-footer">
-        <button data-action="logout" class="btn btn-ghost w-full">Sign out</button>
-      </div>
-    </div>
-  </aside>
-
-  <!-- Main Layout -->
+<body>
   <div class="app-shell">
-    <header class="topbar">
-      <div class="left">
-        <h1 class="app-title">LearnHub</h1>
-      </div>
-      <div class="right">
-        <span id="today" class="today"></span>
-        <input id="global-search" class="search" type="search" placeholder="Search courses, tasks, chat..." />
-      </div>
-    </header>
+    <aside id="sidebar">
+      <div class="logo" title="LearnHub">LH</div>
+      <nav>
+        <a href="#/dashboard" title="Dashboard">🏠</a>
+        <a href="#/courses" title="Courses">📚</a>
+        <a href="#/mylearning" title="My Learning">🧭</a>
+        <a href="#/tasks" title="Tasks">✅</a>
+        <a href="#/announcements" title="Announcements">📣</a>
+        <a href="#/chat" title="Course Chat">💬</a>
+        <a href="#/finals" title="Finals">📝</a>
+        <a href="#/profile" title="Profile">👤</a>
+        <a href="#/guide" title="Guide">📖</a>
+        <a href="#/settings" title="Settings">⚙️</a>
+        <a href="#/admin" data-admin="true" title="Admin">🛠️</a>
+        <a href="#/login" data-action="logout" title="Sign out">⏏️</a>
+      </nav>
+    </aside>
 
-    <main id="app" class="app-content" role="main" tabindex="-1">
-      <!-- Routed views injected here -->
-    </main>
+    <div class="col">
+      <header class="appbar">
+        <button id="burger" class="btn" aria-expanded="false" aria-controls="sidebar" title="Menu">☰</button>
+        <input id="global-search" type="search" placeholder="Search everything…" />
+        <div id="today"></div>
+      </header>
 
-    <footer class="footer">
-      <span>© <span id="year"></span> LearnHub</span>
-    </footer>
+      <main id="app">
+        <!-- JS renders here -->
+      </main>
+    </div>
   </div>
 
-  <!-- App (module) -->
+  <!-- IMPORTANT: load as a JS module -->
   <script type="module" src="/js/main.js"></script>
 </body>
 </html>
