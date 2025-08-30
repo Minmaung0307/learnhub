@@ -1,20 +1,69 @@
 rules_version = '2';
+
 service cloud.firestore {
-  match /databases/{database}/documents {
+  match /databases/{db}/documents {
+
     function signedIn() { return request.auth != null; }
     function isAdmin() {
       return signedIn()
-        && exists(/databases/$(database)/documents/roles/$(request.auth.uid))
-        && get(/databases/$(database)/documents/roles/$(request.auth.uid)).data.role == "admin";
+        && get(/databases/$(db)/documents/roles/$(request.auth.uid)).data.role == "admin";
     }
 
+    // --- Bootstrap: allow the signed-in user to create their own role doc ONCE
     match /roles/{uid} {
-      allow read: if signedIn() && request.auth.uid == uid;
+      allow create: if signedIn()
+                    && request.auth.uid == uid
+                    && !exists(/databases/$(db)/documents/roles/$(uid));
+      // user can read their own role; admins can read all
+      allow read: if isAdmin() || (signedIn() && request.auth.uid == uid);
+      // only admins can change/delete roles
+      allow update, delete: if isAdmin();
+    }
+
+    // Meta (for seed markers etc.)
+    match /meta/{doc} {
+      allow read: if true;
       allow write: if isAdmin();
     }
 
-    match /{document=**} {
-      allow read, write: if isAdmin();  // TEMP: allow admins to bootstrap data
+    // Public-ish collections, admin-writable
+    match /courses/{id} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    match /announcements/{id} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    match /finals/{id} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Course chat: everyone signed in can read; create/update/delete by author or admin
+    match /courseChats/{id} {
+      allow read: if signedIn();
+      allow create: if signedIn();
+      allow update, delete: if isAdmin() || (signedIn() && request.resource.data.authorUid == request.auth.uid);
+    }
+
+    // Tasks: owner (uid field) can CRUD; admin can CRUD
+    match /tasks/{id} {
+      allow read: if signedIn();
+      allow write: if isAdmin()
+                   || (signedIn() && request.resource.data.uid == request.auth.uid);
+    }
+
+    // Profiles: user can edit their own; admin can read/write all; everyone can read basic profiles
+    match /profiles/{uid} {
+      allow read: if true;
+      allow write: if isAdmin() || (signedIn() && request.auth.uid == uid);
+    }
+
+    // Per-user course progress/bookmarks
+    match /progress/{id} {
+      allow read, write: if isAdmin()
+                         || (signedIn() && request.resource.data.uid == request.auth.uid);
     }
   }
 }
