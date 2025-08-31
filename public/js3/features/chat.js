@@ -1,0 +1,6 @@
+import { el, toast } from '../services/ui.js'; import { getFirebase } from '../services/firebase.js'; import { onAuth } from '../services/auth.js';
+export async function viewChat(){ const app=document.getElementById('app'); app.innerHTML=''; const user=await new Promise(r=>onAuth(r)); if(!user){ app.append(el('p',{},'Please login.')); return; }
+  app.append(el('h2',{},'Course Chat')); const list=el('div',{class:'card',style:'max-height:50vh;overflow:auto'}); const form=el('div',{class:'row gap mt-2'},[ el('input',{id:'msg',placeholder:'Type message…'}), el('button',{class:'btn primary',onclick:()=>send()},'Send') ]); app.append(list,form);
+  const {db,collection,query,orderBy,onSnapshot,addDoc,serverTimestamp}=await getFirebase(); const q=query(collection(db,'messages'),orderBy('createdAt')); onSnapshot(q,snap=>{ list.innerHTML=''; snap.forEach(d=>{ const m=d.data(); list.append(el('div',{class:'item'},[el('span',{class:'badge'},m.user||'anon'), el('span',{},m.text||'')])); }); list.scrollTop=list.scrollHeight; });
+  async function send(){ const text=document.getElementById('msg').value.trim(); if(!text) return; await addDoc(collection(db,'messages'),{text,uid:user.uid,user:user.displayName||user.email,createdAt:serverTimestamp()}); document.getElementById('msg').value=''; }
+}
