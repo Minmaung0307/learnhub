@@ -1,0 +1,3 @@
+:root[data-theme=slate]{--bg:#0f172a;--panel:#111827;--text:#e5e7eb;--muted:#94a3b8;--primary:#10b981;--border:#1f2937}
+:root[data-theme=emerald]{--bg:#062018;--panel:#07251d;--text:#e6fff7;--muted:#9be5d1;--primary:#10b981;--border:#0b3b2d}
+:root[data-theme=royal]{--bg:#0b1024;--panel:#0f1633;--text:#eef1ff;--muted:#a8b0ff;--primary:#6366f1;--border:#1b2260}
