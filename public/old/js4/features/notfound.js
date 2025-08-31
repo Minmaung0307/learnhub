@@ -1,0 +1,1 @@
+export async function view404(){ const app=document.getElementById('app'); app.innerHTML=''; app.insertAdjacentHTML('beforeend','<div class=card>Not found</div>'); }
