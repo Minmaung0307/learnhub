@@ -1,254 +1,59 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>LearnHub</title>
+<html lang="my">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>LearnHub</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="css/base.css"/>
+  <link rel="stylesheet" href="css/layout.css"/>
+  <link rel="stylesheet" href="css/components.css"/>
+  <link rel="stylesheet" href="css/themes.css"/>
+  <link rel="stylesheet" href="css/utilities.css"/>
+  <link rel="stylesheet" href="css/pages/tasks.css"/>
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css" rel="stylesheet"/>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+  <script type="module" src="js/main.js"></script>
+</head>
+<body class="theme-slate">
+  <aside class="sidebar" id="sidebar">
+    <div class="brand"><div class="logo" id="logoCircle">LH</div><div class="name" id="brandName">LearnHub</div></div>
+    <nav class="nav">
+      <a class="nav-item" href="#/dashboard"><i class="icon ri-home-5-line"></i><span class="label">Dashboard</span></a>
+      <a class="nav-item" href="#/courses"><i class="icon ri-book-2-line"></i><span class="label">Courses</span></a>
+      <a class="nav-item" href="#/mylearning"><i class="icon ri-graduation-cap-line"></i><span class="label">My Learning</span></a>
+      <a class="nav-item" href="#/tasks"><i class="icon ri-kanban-view"></i><span class="label">Tasks</span></a>
+      <a class="nav-item" href="#/profile"><i class="icon ri-user-3-line"></i><span class="label">Profile</span></a>
+      <a class="nav-item" href="#/chat"><i class="icon ri-chat-3-line"></i><span class="label">Chat</span></a>
+      <a class="nav-item" href="#/settings"><i class="icon ri-settings-3-line"></i><span class="label">Settings</span></a>
+      <a class="nav-item" href="#/admin"><i class="icon ri-shield-user-line"></i><span class="label">Admin</span></a>
+      <a class="nav-item" href="#/guide"><i class="icon ri-compass-3-line"></i><span class="label">Guide</span></a>
+    </nav>
+  </aside>
+  <header class="topbar">
+    <button class="sidebar-toggle btn icon" id="burger" aria-label="Toggle menu"><i class="ri-menu-line"></i></button>
+    <div class="grow"></div>
+    <div class="search"><i class="ri-search-line"></i><input id="globalSearch" placeholder="Search anything…"/></div>
+    <div id="today" class="muted"></div>
+    <button class="btn icon" id="btnLogout" title="Sign out"><i class="ri-logout-box-r-line"></i></button>
+  </header>
+  <main id="app" class="main"></main>
 
-    <!-- CSS order matters: base → layout → components → themes → utilities -->
-    <link rel="stylesheet" href="/css/base.css" />
-    <link rel="stylesheet" href="/css/layout.css" />
-    <link rel="stylesheet" href="/css/components.css" />
-    <link rel="stylesheet" href="/css/themes.css" />
-    <link rel="stylesheet" href="/css/utilities.css" />
-    <link rel="stylesheet" href="/css/pages/tasks.css" />
-
-    <style>
-      /* Minimal safety net so it's not “ugly” if a file is cached wrong */
-      :root {
-        --bg: #0b1020;
-        --panel: #121a2e;
-        --card: #182342;
-        --text: #e8eeff;
-        --muted: #9bb0ff44;
-        --accent: #35c2d1;
-      }
-      html,
-      body {
-        height: 100%;
-      }
-      body {
-        margin: 0;
-        background: linear-gradient(180deg, #0b1020, #0e1730 60%, #0b1020);
-        color: var(--text);
-        font: 14px/1.45 system-ui, -apple-system, Segoe UI, Roboto,
-          "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji",
-          "Segoe UI Emoji";
-      }
-      .app-shell {
-        display: grid;
-        grid-template-columns: 64px 1fr;
-        min-height: 100vh;
-      }
-      #sidebar {
-        background: var(--panel);
-        border-right: 1px solid #22305a;
-        position: sticky;
-        top: 0;
-        height: 100vh;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 12px;
-        padding: 10px 8px;
-      }
-      #sidebar .logo {
-        width: 40px;
-        height: 40px;
-        border-radius: 10px;
-        background: linear-gradient(135deg, #2bb5ff, #35c2d1);
-        display: grid;
-        place-items: center;
-        color: #00121a;
-        font-weight: 800;
-      }
-      #sidebar nav a {
-        width: 44px;
-        height: 44px;
-        display: grid;
-        place-items: center;
-        border-radius: 10px;
-        color: #bcd7ff;
-        text-decoration: none;
-      }
-      #sidebar nav a:hover {
-        background: #1e2a4f;
-        color: #fff;
-      }
-      #sidebar nav a[data-admin="true"] {
-        outline: 1px dashed #2bb5ff33;
-      }
-      header.appbar {
-        position: sticky;
-        top: 0;
-        z-index: 5;
-        background: rgba(15, 22, 40, 0.65);
-        backdrop-filter: saturate(140%) blur(8px);
-        border-bottom: 1px solid #22305a;
-        display: flex;
-        align-items: center;
-        gap: 16px;
-        padding: 10px 16px;
-      }
-      #global-search {
-        flex: 1;
-        min-width: 160px;
-        background: #101733;
-        border: 1px solid #213061;
-        padding: 9px 12px;
-        border-radius: 10px;
-        color: #cfe3ff;
-        outline: none;
-      }
-      #global-search::placeholder {
-        color: #9db7ff99;
-      }
-      #today {
-        color: #9bb0ffcc;
-        font-size: 12px;
-      }
-      .btn {
-        background: #1c2a54;
-        border: 1px solid #27407b;
-        color: #e8f0ff;
-        padding: 8px 12px;
-        border-radius: 10px;
-        cursor: pointer;
-      }
-      .btn:hover {
-        background: #22335f;
-      }
-      .btn-primary {
-        background: linear-gradient(135deg, #2bb5ff, #35c2d1);
-        border: none;
-        color: #00222a;
-        font-weight: 700;
-      }
-
-      main#app {
-        padding: 16px;
-      }
-      .card {
-        background: linear-gradient(180deg, #131e3a, #0f1935);
-        border: 1px solid #203060;
-        border-radius: 14px;
-        box-shadow: 0 6px 28px rgba(12, 18, 40, 0.45);
-      }
-      .p-4 {
-        padding: 16px;
-      }
-      .p-3 {
-        padding: 12px;
-      }
-      .mb-2 {
-        margin-bottom: 8px;
-      }
-      .mb-3 {
-        margin-bottom: 12px;
-      }
-      .muted {
-        color: #bcd7ff99;
-      }
-      @media (max-width: 900px) {
-        .app-shell {
-          grid-template-columns: 1fr;
-        }
-        #sidebar {
-          position: fixed;
-          left: -260px;
-          width: 220px;
-          align-items: stretch;
-          padding: 16px;
-        }
-        body.sidebar-open #sidebar {
-          left: 0;
-        }
-        header.appbar {
-          position: sticky;
-          top: 0;
-        }
-      }
-    </style>
-  </head>
-  <body>
-    <div class="app-shell">
-      <aside id="sidebar">
-        <div class="logo" title="LearnHub">LH</div>
-        <nav id="side-nav">
-          <a href="#/dashboard"
-            ><span class="icon">🏠</span
-            ><span class="nav-label">Dashboard</span></a
-          >
-          <a href="#/courses"
-            ><span class="icon">📚</span
-            ><span class="nav-label">Courses</span></a
-          >
-          <a href="#/mylearning"
-            ><span class="icon">🧭</span
-            ><span class="nav-label">My Learning</span></a
-          >
-          <a href="#/tasks"
-            ><span class="icon">✅</span><span class="nav-label">Tasks</span></a
-          >
-          <a href="#/announcements"
-            ><span class="icon">📣</span
-            ><span class="nav-label">Announcements</span></a
-          >
-          <a href="#/chat"
-            ><span class="icon">💬</span
-            ><span class="nav-label">Course Chat</span></a
-          >
-          <a href="#/finals"
-            ><span class="icon">📝</span
-            ><span class="nav-label">Finals</span></a
-          >
-          <a href="#/profile"
-            ><span class="icon">👤</span
-            ><span class="nav-label">Profile</span></a
-          >
-          <a href="#/guide"
-            ><span class="icon">📖</span><span class="nav-label">Guide</span></a
-          >
-          <a href="#/settings"
-            ><span class="icon">⚙️</span
-            ><span class="nav-label">Settings</span></a
-          >
-          <a href="#/admin" data-admin="true"
-            ><span class="icon">🛠️</span><span class="nav-label">Admin</span></a
-          >
-          <a href="#/login" data-action="logout"
-            ><span class="icon">⏏️</span
-            ><span class="nav-label">Sign out</span></a
-          >
-        </nav>
-      </aside>
-
-      <div class="col">
-        <header class="appbar">
-          <button
-            id="burger"
-            class="btn"
-            aria-expanded="false"
-            aria-controls="sidebar"
-            title="Menu"
-          >
-            ☰
-          </button>
-          <input
-            id="global-search"
-            type="search"
-            placeholder="Search everything…"
-          />
-          <div id="today"></div>
-        </header>
-
-        <main id="app">
-          <!-- JS renders here -->
-        </main>
+  <template id="tpl-login">
+    <section class="card w-420">
+      <h2>Login</h2>
+      <form id="login-form">
+        <input type="email" id="login-email" placeholder="Email" required/>
+        <input type="password" id="login-pass" placeholder="Password" required/>
+        <button type="submit" class="btn primary">Login</button>
+      </form>
+      <div class="row gap">
+        <button id="btn-signup" class="btn">Sign up</button>
+        <button id="btn-forgot" class="btn ghost">Forgot password</button>
       </div>
-    </div>
-
-    <!-- IMPORTANT: load as a JS module -->
-    <script type="module" src="/js/main.js"></script>
-  </body>
+    </section>
+  </template>
+</body>
 </html>

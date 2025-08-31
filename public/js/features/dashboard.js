@@ -1,11 +1,2 @@
-export function renderDashboard(mount) {
-  const user = window.App?.state?.user;
-  const role = window.App?.state?.role || "guest";
-  mount.innerHTML = `
-    <section class="card p-4">
-      <h2 class="mb-2">Dashboard</h2>
-      <p>Signed in as: <strong>${user?.email || "n/a"}</strong> (${role})</p>
-      <p class="muted">Use the sidebar to navigate. Admins can open <em>Admin</em> to bootstrap roles and seed demo content.</p>
-    </section>
-  `;
-}
+import { el } from '../services/ui.js'; import { getFirebase } from '../services/firebase.js';
+export async function viewDashboard(){ const app=document.getElementById('app'); app.innerHTML=''; const {db,collection,getCountFromServer,query}=await getFirebase(); let c1=0,c2=0; try{ c1=(await getCountFromServer(query(collection(db,'courses')))).data().count; c2=(await getCountFromServer(query(collection(db,'messages')))).data().count; }catch{} app.append(el('section',{class:'grid',style:'grid-template-columns:repeat(3,1fr)'},[ el('div',{class:'card'},[el('h3',{},'Announcements'),el('p',{},'Use Admin → Seed Demo.')]), el('div',{class:'card'},[el('h3',{},'Courses'),el('p',{},String(c1))]), el('div',{class:'card'},[el('h3',{},'Chat messages'),el('p',{},String(c2))]) ])); }
