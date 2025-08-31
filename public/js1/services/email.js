@@ -1,0 +1,1 @@
+export function initEmail(pubKey){ try{ window.emailjs?.init({ publicKey: pubKey }); }catch{} }

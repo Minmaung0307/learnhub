@@ -1,0 +1,6 @@
+.card.list .item{display:flex;gap:10px;align-items:center;border-top:1px solid var(--border);padding:10px 0}.card.list .item:first-child{border-top:none}
+.kbar{display:flex;gap:8px;flex-wrap:wrap}.kbar .btn{padding:.4rem .6rem}.progress{height:10px;background:#0b1220;border:1px solid var(--border);border-radius:10px;overflow:hidden}
+.progress>i{display:block;height:100%;background:linear-gradient(90deg,#06b6d4,#22c55e)}.lesson{padding:12px;border-radius:12px;border:1px solid var(--border);background:#0b1220}
+.lesson .meta{display:flex;gap:10px;align-items:center;color:var(--muted);font-size:.9rem}.course-card img{border-radius:10px;height:140px;object-fit:cover}
+.course-card .title{font-weight:700}.kv{display:grid;grid-template-columns:140px 1fr;gap:8px;align-items:center}.kv b{color:#94a3b8}
+.admin-tools{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
